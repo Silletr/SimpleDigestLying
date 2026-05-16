@@ -1,0 +1,18 @@
+[project]
+name = "simpledigestlying"
+version = "0.1.0"
+description = "A simple (or not) Telegram bot for Daily Digest!"
+authors = [
+    {name = "Silletr",email = "silletrMain@gmail.com"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram (>=3.28.2,<4.0.0)",
+    "ollama (>=0.6.2,<0.7.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
