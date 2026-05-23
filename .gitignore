@@ -1,3 +1,4 @@
 .env
 __pycache__/
 .pyre/
+src/simpledigestlying/core/simpledigestlying.session

@@ -2,25 +2,19 @@ import asyncio
 from loguru import logger
 from os import getenv
 from dotenv import load_dotenv
+from pyrogram import Client
+from simpledigestlying.core.handlers import register_handlers
 
-from aiogram import Bot
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
+load_dotenv()
 
-from simpledigestlying.core.dispatcher import dispatcher
+app = Client(
+    "simpledigestlying",
+    api_id=getenv("API_ID"),
+    api_hash=getenv("API_HASH"),
+)
 
-
-#  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async def main():
-    load_dotenv()
-    token = getenv("BOT_TOKEN")
-    bot = Bot(
-        token=token,
-        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-    )
-    await dispatcher.start_polling(bot)
-
+register_handlers(app)
 
 if __name__ == "__main__":
     logger.add(sink="../logs/app.log", level="INFO")
-    asyncio.run(main())
+    app.run()
