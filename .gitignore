@@ -2,3 +2,4 @@
 __pycache__/
 .pyre/
 src/simpledigestlying/core/simpledigestlying.session
+/src/simpledigestlying/logs/*
