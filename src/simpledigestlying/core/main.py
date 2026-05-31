@@ -1,4 +1,3 @@
-import asyncio
 from loguru import logger
 from os import getenv
 from dotenv import load_dotenv
@@ -7,10 +6,13 @@ from simpledigestlying.core.handlers import register_handlers
 
 load_dotenv()
 
+api_id: str | None = getenv("API_ID")
+api_hash: str | None = getenv("API_HASH")
+
 app = Client(
     "simpledigestlying",
-    api_id=getenv("API_ID"),
-    api_hash=getenv("API_HASH"),
+    api_id=api_id,
+    api_hash=api_hash,
 )
 
 register_handlers(app)

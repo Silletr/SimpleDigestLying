@@ -32,8 +32,12 @@ def register_handlers(app: Client):
                     msg.from_user.username if msg.from_user else 'unknown'
                 }"
             )
-
+            with open(file="chat_history.txt", mode="a") as file:
+                file.write(f"""
+                    Message Sender: {msg.from_user.username if msg.from_user else "No Name"}
+                    Message Text: {msg.text}
+                """)
         await client.send_message(
             chat_id=message.chat.id,
-            text="Successfully sent history to the ../logs/handlers.py.log. Check it out right fcking now",
+            text="Successfully sent history to the `logs/handlers.py.log`. Check it out right fcking now",
         )
