@@ -6,10 +6,10 @@ from loguru import logger
 import tracemalloc
 
 tracemalloc.start()
-#    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-#    ┃    get messages from the last 24h    ┃
-#    ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
-today = datetime.now(tz=ZoneInfo("Europe/Kyiv"))
+
+kyiv = ZoneInfo("Europe/Kyiv")
+today = datetime.now(tz=kyiv)
+
 logger.add(
     sink="../logs/handlers.py.log",
     level="INFO",
@@ -17,6 +17,7 @@ logger.add(
 )
 
 
+#  ────────────────────────────────────────────────────────────────
 def register_handlers(app: Client):
     @app.on_message(filters.command("start") & filters.private)
     async def start_handler(client: Client, message: Message):
@@ -27,17 +28,23 @@ def register_handlers(app: Client):
         async for msg in app.get_chat_history(
             chat_id=message.chat.id, offset_date=today
         ):
-            logger.success(
-                f"Message text: {msg.text} | Message sender: {
-                    msg.from_user.username if msg.from_user else 'unknown'
-                }"
-            )
-            with open(file="chat_history.txt", mode="a") as file:
-                file.write(f"""
-                    Message Sender: {msg.from_user.username if msg.from_user else "No Name"}
-                    Message Text: {msg.text}
-                """)
+            msg_date_kyiv = msg.date.replace(tzinfo=ZoneInfo("UTC")).astimezone(kyiv)
+            if msg_date_kyiv.date() == today.date():
+                logger.success(
+                    f"Message text: {msg.text} | "
+                    f"Message sender: {
+                        msg.from_user.username if msg.from_user else 'unknown'
+                    }"
+                )
+                with open("chat_history.txt", mode="a") as file:
+                    file.write(
+                        f"Message Sender: {
+                            msg.from_user.username if msg.from_user else 'No Name'
+                        }\n"
+                        f"Message Text: {msg.text}\n"
+                    )
+            else:
+                break
         await client.send_message(
-            chat_id=message.chat.id,
-            text="Successfully sent history to the `logs/handlers.py.log`. Check it out right fcking now",
+            chat_id=message.chat.id, text="Successfully saved to `logs/handlers.py.log`"
         )
